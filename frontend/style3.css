@@ -1,71 +1,89 @@
-
 body {
     font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     margin: 0;
-    background-color: #f4f4f4;
+    background-color: #0E1117;
+
+    /* --- Add these lines to center the container --- */
+    display: flex;
+    align-items: center;   /* Vertically centers */
+    justify-content: center; /* Horizontally centers */
+    min-height: 100vh;     /* Makes the body fill the full screen height */
 }
 
 .container {
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 300px;
-    background-color: white;
-    opacity: 95%;
+    /* --- Core Improvements --- */
+    background-color: rgba(15, 23, 42, 0.85); /* A semi-transparent dark blue */
+    backdrop-filter: blur(8px); /* Frosted glass effect */
+    border-radius: 15px; /* Softer, rounded corners */
+    padding: 30px; /* More space inside the container */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* A shadow to lift the container */
+
+    /* --- Layout and Sizing --- */
+    max-width: 500px; /* Prevents the container from becoming too wide on large screens */
+    /* The margin property is no longer needed for centering */
+    
+    /* --- Flexbox for easy alignment --- */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center-aligns all items (h1, input, button) */
+    gap: 15px; /* Adds consistent spacing between all elements */
 }
 
+/* --- Style the Elements Inside --- */
+
 h1 {
+    color: #F8961E; /* A bitcoin-orange color for the title */
+    margin-bottom: 10px; /* Extra space below the title */
     font-size: 35px;
-    
 }
 
 input[type="file"] {
-    margin-bottom: 10px;
+    width: 90%;
+    color: #E2E8F0;
 }
 
-input[type="number"] {
-    padding: 10px;
-    width: calc(100% - 22px);
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
+input[type="number"], button, a.navbar-link {
+    width: 90%; /* Make inputs and buttons a consistent width */
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #4A5568;
+    background-color: #1A202C;
+    color: #E2E8F0;
+    font-size: 16px;
+    text-align: center;
+    box-sizing: border-box; /* Ensures padding doesn't affect the width */
 }
 
 button {
-    padding: 10px 20px;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 5px;
+    background-color: #F8961E; /* Orange button */
+    color: #0D1B2A;
+    font-weight: bold;
     cursor: pointer;
-    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #fb8500; /* A slightly different orange on hover */
+}
+
+a.navbar-link {
+    display: inline-block; /* Ensures it behaves like a block for styling */
+    text-decoration: none;
+    background-color: transparent;
+    border: 1px solid #F8961E;
+    color: #F8961E;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+a.navbar-link:hover {
+    background-color: #F8961E;
+    color: #0D1B2A;
 }
 
 #result {
-    margin-top: 20px;
-    font-size: 25px;
-    color: black;
-    background-color:#ccc;
-    margin: auto;
-}
-
-a {
-    display: inline-block;
-    margin-top: 10px;
-    color: #007bff;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
+    margin-top: 15px;
+    font-size: 1.2em;
+    color: #FFFFFF;
+    background-color: transparent; /* Remove the grey background */
 }
