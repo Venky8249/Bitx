@@ -10,21 +10,54 @@
 <style>
 body{
     background-image: url(Bitcoin.jpeg);
-        background-repeat: no-repeat;
-        background-position: center;
-        background-attachment: fixed;
-        background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
 }
 </style>
-<body >
+<body>
     <div class="container">
         <h1>Bitcoin Price Prediction</h1>
         <input type="file" id="csvFile" accept=".csv">
         <input type="number" id="predictDate" placeholder="Enter day number">
         <button id="predictButton">Predict Price</button>
-        <a href="index.html" class="navbar-link active" data-nav-link>Homepage</a>
+        <button id="downloadButton">Download Sample CSV </button>
+        
         <div id="result"></div>
     </div>
+
+    <script>
+        document.getElementById('downloadButton').addEventListener('click', function() {
+            // CSV content provided
+            const csvContent = `DateTime,Price
+2024-10-01T00:00:00,641100
+2024-10-02T00:00:00,624650
+2024-10-03T00:00:00,614690
+2024-10-04T00:00:00,624650
+2024-10-05T00:00:00,623710
+2024-10-06T00:00:00,629590
+2024-10-07T00:00:00,644430
+2024-10-08T00:00:00,631740
+2024-10-08T00:00:00,625080
+2024-10-09T12:00:00,612360`;
+
+            // Create a Blob object
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+            // Create a temporary link element
+            const link = document.createElement("a");
+            if (link.download !== undefined) { // Check if the browser supports the download attribute
+                const url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", "Bitx.csv");
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        });
+    </script>
     <script src="script3.js"></script>
 </body>
 </html>
