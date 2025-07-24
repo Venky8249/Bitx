@@ -3,34 +3,305 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bitcoin Price Prediction</title>
-    <link rel="stylesheet" href="style3.css">
-</head>
+    <title>Bitx</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        @keyframes aurora {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-<style>
-body{
-    background-image: url(Bitcoin1.png);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
-    background-size: cover;
-}
-</style>
-<body>
-    <div class="container">
-        <h1>Bitcoin Price Prediction</h1>
-        <input type="file" id="csvFile" accept=".csv">
-        <input type="number" id="predictDate" placeholder="Enter day number">
-        <button id="predictButton">Predict Price</button>
-        <button id="downloadButton">Download Sample CSV </button>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #e5e5e5;
+            scroll-behavior: smooth;
+            /* Animated Aurora Background */
+            background-image: radial-gradient(at 47% 33%, hsla(28, 90%, 50%, 0.15) 0, transparent 59%), radial-gradient(at 82% 65%, hsla(204, 84%, 55%, 0.1) 0, transparent 55%);
+            background-size: 200% 200%;
+            animation: aurora 20s ease infinite;
+        }
         
-        <div id="result"></div>
-    </div>
+        /* --- Header Scroll Effect --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .header-scrolled {
+            background-color: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            padding-top: 150px; /* Adjust for fixed header */
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Gradient Text for Headline */
+        .gradient-text {
+            background: linear-gradient(90deg, #f7931a, #fdf4e6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        /* --- Feature Card Styling --- */
+        .feature-card {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(247, 147, 26, 0.5);
+            box-shadow: 0 0 25px rgba(247, 147, 26, 0.2), 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- CTA Button Styling --- */
+        .cta-button {
+            background: linear-gradient(90deg, #f7931a, #f9b15a);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(247, 147, 26, 0.5);
+        }
+
+        /* --- Scroll Animation Base Styles --- */
+        .animate-on-scroll {
+            opacity: 0;
+            transition: opacity 0.6s ease-out, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: scale(0.95);
+        }
+        .fade-in-up {
+            transform: translateY(40px) scale(0.95);
+        }
+        .fade-in-left {
+            transform: translateX(-40px) scale(0.95);
+        }
+        .fade-in-right {
+            transform: translateX(40px) scale(0.95);
+        }
+        .is-visible {
+            opacity: 1;
+            transform: translateX(0) translateY(0) scale(1);
+        }
+        
+        /* --- Footer Icon Hover --- */
+        footer a {
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        footer a:hover {
+            transform: translateY(-3px);
+            color: #f7931a;
+        }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header id="main-header" class="py-4 px-4 sm:px-6 lg:px-8">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <svg class="w-8 h-8 text-[#f7931a]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                <h1 class="text-xl font-bold ml-2">Bitx</h1>
+            </div>
+            <nav>
+                <a href="#features" class="text-gray-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Features</a>
+                <a href="#how-it-works" class="text-gray-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium">How It Works</a>
+                <a href="#csv-format" class="text-gray-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium">CSV Format</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section text-center py-20 lg:py-32 px-4 sm:px-6 lg:px-8">
+            <div class="container mx-auto">
+                <h2 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4 animate-on-scroll fade-in-up gradient-text">Predict Bitcoin's Next Move</h2>
+                <p class="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-8 animate-on-scroll fade-in-up" style="transition-delay: 0.2s;">Leverage a linear regression model to analyze historical data and forecast future Bitcoin price points. Upload your CSV and get instant insights.</p>
+                <!-- This link now points to prediction.html -->
+                <a href="prediction.html" id="prediction-link" class="cta-button text-gray-900 font-bold py-3 px-8 rounded-full text-lg inline-block animate-on-scroll fade-in-up" style="transition-delay: 0.4s;">
+                    Go to Prediction Page &rarr;
+                </a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-20 px-4 sm:px-6 lg:px-8">
+            <div class="container mx-auto">
+                <div class="text-center mb-12 animate-on-scroll fade-in-up">
+                    <h3 class="text-3xl font-bold text-white">Project Features</h3>
+                    <p class="text-gray-400 mt-2">Everything you need for smarter crypto analysis.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="feature-card p-8 rounded-xl animate-on-scroll fade-in-up">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-full bg-[#f7931a] bg-opacity-20 mb-4">
+                             <svg class="w-6 h-6 text-[#f7931a]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path></svg>
+                        </div>
+                        <h4 class="text-xl font-semibold text-white mb-2">Linear Regression Model</h4>
+                        <p class="text-gray-400">Our model uses a time-tested linear regression algorithm to identify trends in your data and project future price values.</p>
+                    </div>
+                    <!-- Feature 2 -->
+                    <div class="feature-card p-8 rounded-xl animate-on-scroll fade-in-up" style="transition-delay: 0.2s;">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-full bg-[#f7931a] bg-opacity-20 mb-4">
+                             <svg class="w-6 h-6 text-[#f7931a]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        </div>
+                        <h4 class="text-xl font-semibold text-white mb-2">Easy CSV Upload</h4>
+                        <p class="text-gray-400">Simply upload your historical Bitcoin data in a CSV file. Our system handles the rest, no complex setup required.</p>
+                    </div>
+                    <!-- Feature 3 -->
+                    <div class="feature-card p-8 rounded-xl animate-on-scroll fade-in-up" style="transition-delay: 0.4s;">
+                         <div class="flex items-center justify-center h-12 w-12 rounded-full bg-[#f7931a] bg-opacity-20 mb-4">
+                           <svg class="w-6 h-6 text-[#f7931a]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <h4 class="text-xl font-semibold text-white mb-2">Instant Price Prediction</h4>
+                        <p class="text-gray-400">Get an immediate price prediction in Rupees (₹) after your data is processed, allowing for timely decision-making.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="py-20 px-4 sm:px-6 lg:px-8 bg-black bg-opacity-20">
+            <div class="container mx-auto">
+                <div class="text-center mb-12 animate-on-scroll fade-in-up">
+                    <h3 class="text-3xl font-bold text-white">How It Works</h3>
+                    <p class="text-gray-400 mt-2">A simple, three-step process to get your prediction.</p>
+                </div>
+                <div class="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16">
+                    <!-- Step 1 -->
+                    <div class="text-center animate-on-scroll fade-in-left">
+                        <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-2 border-dashed border-[#f7931a]">
+                            <span class="text-3xl font-bold text-[#f7931a]">1</span>
+                        </div>
+                        <h4 class="text-lg font-semibold text-white">Prepare Your Data</h4>
+                        <p class="text-gray-400 max-w-xs">Format your data into a CSV file with 'DateTime' and 'Price' columns.</p>
+                    </div>
+                     <!-- Arrow -->
+                    <div class="hidden md:block text-[#f7931a] opacity-50 animate-on-scroll fade-in-up" style="transition-delay: 0.2s;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="text-center animate-on-scroll fade-in-up" style="transition-delay: 0.4s;">
+                        <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-2 border-dashed border-[#f7931a]">
+                            <span class="text-3xl font-bold text-[#f7931a]">2</span>
+                        </div>
+                        <h4 class="text-lg font-semibold text-white">Upload & Enter Day</h4>
+                        <p class="text-gray-400 max-w-xs">Upload your file and enter the future day number you want to predict.</p>
+                    </div>
+                     <!-- Arrow -->
+                     <div class="hidden md:block text-[#f7931a] opacity-50 animate-on-scroll fade-in-up" style="transition-delay: 0.6s;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="text-center animate-on-scroll fade-in-right" style="transition-delay: 0.8s;">
+                        <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-2 border-dashed border-[#f7931a]">
+                            <span class="text-3xl font-bold text-[#f7931a]">3</span>
+                        </div>
+                        <h4 class="text-lg font-semibold text-white">Get Your Insight</h4>
+                        <p class="text-gray-400 max-w-xs">Analyze the predicted price, calculated in Rupees (₹), generated by the model.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CSV Format Section -->
+        <section id="csv-format" class="py-20 px-4 sm:px-6 lg:px-8">
+            <div class="container mx-auto">
+                <div class="text-center mb-12 animate-on-scroll fade-in-up">
+                    <h3 class="text-3xl font-bold text-white">Required CSV Format</h3>
+                    <p class="text-gray-400 mt-2">Your CSV file must have these two columns: 'DateTime' and 'Price'.</p>
+                </div>
+                <div class="max-w-2xl mx-auto bg-gray-900 bg-opacity-70 rounded-xl p-6 border border-gray-700 animate-on-scroll fade-in-up" style="transition-delay: 0.2s;">
+                    <pre class="text-left text-sm text-gray-300 overflow-x-auto"><code>DateTime,Price
+2024-10-01T00:00:00,641100
+2024-10-02T00:00:00,624650
+2024-10-03T00:00:00,614690
+2024-10-04T00:00:00,624650
+2024-10-05T00:00:00,623710
+2024-10-06T00:00:00,629590
+2024-10-07T00:00:00,644430
+2024-10-08T00:00:00,631740
+2024-10-08T00:00:00,625080
+2024-10-09T12:00:00,612360</code></pre>
+                    <div class="mt-6 text-center">
+                        <button id="downloadSampleCsv" class="cta-button text-gray-900 font-bold py-2 px-6 rounded-full text-base inline-block">
+                            Download Sample CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 bg-opacity-50">
+        <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center text-gray-400">
+            <p>&copy; 2024 BTC Predict. All Rights Reserved.</p>
+            <p class="mt-2 text-sm">This is a project for demonstration purposes and not financial advice.</p>
+             <div class="flex justify-center mt-4 space-x-6">
+                <a href="#" class="text-gray-400"><span class="sr-only">Twitter</span><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.71v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path></svg></a>
+                <a href="#" class="text-gray-400"><span class="sr-only">GitHub</span><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.165 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.378.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.003 10.003 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"></path></svg></a>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        document.getElementById('downloadButton').addEventListener('click', function() {
-            // CSV content provided
-            const csvContent = `DateTime,Price
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Header Scroll Logic ---
+            const header = document.getElementById('main-header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('header-scrolled');
+                } else {
+                    header.classList.remove('header-scrolled');
+                }
+            });
+
+            // --- Intersection Observer for Scroll Animations ---
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, {
+                threshold: 0.1 // Trigger when 10% of the element is visible
+            });
+
+            animatedElements.forEach(el => {
+                observer.observe(el);
+            });
+
+            // --- Page Transition for Prediction Link ---
+            document.getElementById('prediction-link').addEventListener('click', function(e) {
+                e.preventDefault(); 
+                document.body.style.opacity = 0;
+                document.body.style.transition = 'opacity 0.5s ease-in-out';
+                setTimeout(() => {
+                    window.location.href = this.href;
+                }, 500);
+            });
+
+            // --- Download Sample CSV Logic ---
+            document.getElementById('downloadSampleCsv').addEventListener('click', function() {
+                const csvContent = `DateTime,Price
 2024-10-01T00:00:00,641100
 2024-10-02T00:00:00,624650
 2024-10-03T00:00:00,614690
@@ -42,22 +313,19 @@ body{
 2024-10-08T00:00:00,625080
 2024-10-09T12:00:00,612360`;
 
-            // Create a Blob object
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-
-            // Create a temporary link element
-            const link = document.createElement("a");
-            if (link.download !== undefined) { // Check if the browser supports the download attribute
-                const url = URL.createObjectURL(blob);
-                link.setAttribute("href", url);
-                link.setAttribute("download", "Bitx.csv");
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement("a");
+                if (link.download !== undefined) {
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", "BitX_Sample.csv");
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            });
         });
     </script>
-    <script src="script3.js"></script>
 </body>
 </html>
