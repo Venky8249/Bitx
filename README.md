@@ -11,11 +11,11 @@ A web-based application that predicts future Bitcoin prices based on historical 
 
 ### Main Page
 ![Main Page Screenshot](Screenshot%202025-07-24%20232037.png)
-*A modern, animated landing page that introduces the project.*
+
 
 ### Prediction Page
 ![Prediction Page Screenshot](Screenshot%202025-07-24%20232100.png)
-*The core of the application where users can upload data and get predictions.*
+
 
 ---
 
